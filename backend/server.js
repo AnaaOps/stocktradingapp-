@@ -16,11 +16,20 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/stocks', require('./routes/stocks'));
 app.use('/api/trade', require('./routes/trade'));
 
-// Basic route for testing
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
+const path = require('path');
 
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../client/dist');
+  app.use(express.static(distPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(distPath, 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
+}
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
