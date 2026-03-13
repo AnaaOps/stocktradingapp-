@@ -1,9 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 connectDB();
 
 const app = express();
@@ -16,13 +17,11 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/stocks', require('./routes/stocks'));
 app.use('/api/trade', require('./routes/trade'));
 
-const path = require('path');
-
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../client/dist');
   app.use(express.static(distPath));
 
-  app.get('*', (req, res) => {
+  app.get('/*splat', (req, res) => {
     res.sendFile(path.resolve(distPath, 'index.html'));
   });
 } else {

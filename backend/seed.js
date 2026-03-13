@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 const Stock = require('./models/Stock');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const connectDB = async () => {
   try {
